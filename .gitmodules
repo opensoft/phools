@@ -1,0 +1,21 @@
+[submodule "library/vendor/Symfony/Component/ClassLoader"]
+	path = library/vendor/Symfony/Component/ClassLoader
+	url = git://github.com/symfony/ClassLoader.git
+[submodule "library/vendor/Symfony/Component/DependencyInjection"]
+	path = library/vendor/Symfony/Component/DependencyInjection
+	url = git://github.com/symfony/DependencyInjection.git
+[submodule "library/vendor/Symfony/Component/Config"]
+	path = library/vendor/Symfony/Component/Config
+	url = git://github.com/symfony/Config.git
+[submodule "library/vendor/Symfony/Component/Console"]
+	path = library/vendor/Symfony/Component/Console
+	url = git://github.com/symfony/Console.git
+[submodule "library/vendor/zf2"]
+	path = library/vendor/zf2
+	url = git://github.com/zendframework/zf2.git
+[submodule "library/vendor/doctrine-oxm"]
+	path = library/vendor/doctrine-oxm
+	url = git://github.com/doctrine/oxm.git
+[submodule "library/vendor/Symfony/Component/HttpKernel"]
+	path = library/vendor/Symfony/Component/HttpKernel
+	url = git://github.com/symfony/HttpKernel.git

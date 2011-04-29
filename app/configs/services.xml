@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<container xmlns="http://symfony.com/schema/dic/services"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+
+    <parameters>
+        <parameter key="drools.execution_server.url">http://localhost:8080/drools-server/kservice/rest/execute</parameter>
+        <parameter key="doctrine.oxm.entity_paths" type="collection">
+            <parameter>library/Opensoft/Drools/Entity</parameter>
+        </parameter>
+
+
+
+        <parameter key="logger.class">Opensoft\Drools\Logging\ZendLogger</parameter>
+
+        <parameter key="drools.communicator.class">Opensoft\Drools\DroolsCommunicator</parameter>
+
+        <parameter key="doctrine.oxm.marshaller.class">Doctrine\OXM\Marshaller\XmlMarshaller</parameter>
+        <parameter key="doctrine.oxm.metadata_factory.class">Doctrine\OXM\Mapping\ClassMetadataFactory</parameter>
+        <parameter key="doctrine.oxm.configuration.class">Doctrine\OXM\Configuration</parameter>
+        <parameter key="doctrine.oxm.mapping.driver.annotation_driver.class">Doctrine\OXM\Mapping\Driver\AnnotationDriver</parameter>
+        
+        <parameter key="doctrine.common.cache.apc_cache.class">Doctrine\Common\Cache\ApcCache</parameter>
+        <parameter key="doctrine.common.cache.memcache_cache.class">Doctrine\Common\Cache\MemcacheCache</parameter>
+        <parameter key="doctrine.common.cache.xcache_cache.class">Doctrine\Common\Cache\XcacheCache</parameter>
+        <parameter key="doctrine.common.cache.array_cache.class">Doctrine\Common\Cache\ArrayCache</parameter>
+        <parameter key="doctrine.common.cache.class">%doctrine.common.cache.apc_cache.class%</parameter>
+        <parameter key="doctrine.common.annotations.annotation_reader.class">Doctrine\Common\Annotations\AnnotationReader</parameter>
+        <parameter key="doctrine.common.annotations.namespace">Doctrine\OXM\Mapping\</parameter>
+    </parameters>
+
+
+    <services>
+        <service id="logger" class="%logger.class%">
+            <call method="addWriter">
+                <argument type="service">
+                    <service class="Zend\Log\Writer\Stream">
+                        <argument>logs/application.log</argument>
+                    </service>
+                </argument>
+            </call>
+        </service>
+
+        <service id="drools.communicator" class="%drools.communicator.class%">
+            <argument>%drools.execution_server.url%</argument>
+            <argument type="service" id="doctrine.oxm.marshaller" />
+        </service>
+
+        <!-- Doctrine OXM Marshalling -->
+        <service id="doctrine.oxm.marshaller" class="%doctrine.oxm.marshaller.class%">
+            <argument type="service" id="doctrine.oxm.metadata_factory" />
+        </service>
+
+        <service id="doctrine.oxm.metadata_factory" class="%doctrine.oxm.metadata_factory.class%">
+            <argument type="service" id="doctrine.oxm.configuration" />
+        </service>
+
+        <service id="doctrine.oxm.configuration" class="%doctrine.oxm.configuration.class%">
+            <call method="setMetadataDriverImpl">
+                <argument type="service" id="doctrine.oxm.mapping.driver.annotation_driver" />
+            </call>
+            <call method="setMetadataCacheImpl">
+                <argument type="service" id="doctrine.common.cache" />
+            </call>
+        </service>
+
+        <service id="doctrine.oxm.mapping.driver.annotation_driver" class="%doctrine.oxm.mapping.driver.annotation_driver.class%">
+            <argument type="service" id="doctrine.common.annotations.annotation_reader" />
+            <argument>%doctrine.oxm.entity_paths%</argument>
+        </service>
+
+        <service id="doctrine.common.cache" class="%doctrine.common.cache.class%" />
+
+        <service id="doctrine.common.annotations.annotation_reader" class="%doctrine.common.annotations.annotation_reader.class%">
+            <call method="setDefaultAnnotationNamespace"><argument>%doctrine.common.annotations.namespace%</argument></call>
+        </service>
+
+    </services>
+
+
+    <interfaces>
+        <interface class="Opensoft\Drools\Logging\LoggerAware">
+            <call method="setLogger">
+                <argument type="service" id="logger" />
+            </call>
+        </interface>
+        <interface class="Symfony\Component\DependencyInjection\ContainerAwareInterface">
+            <call method="setContainer">
+                <argument type="service" id="container" />
+            </call>
+        </interface>
+    </interfaces>
+
+</container>
