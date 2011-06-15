@@ -57,11 +57,8 @@ EOF
         $communicator = $this->container->get('drools.communicator');
 
 
-        $message = new \Opensoft\Drools\TestPayloads\Message('salaboy');
-        $communicator->insert($message, 'person1');
-
-        $message = new \Opensoft\Drools\TestPayloads\Message('richard');
-        $communicator->insert($message, 'person2');
+        $message = new \Opensoft\Drools\TestPayloads\Login('salaboy');
+        $communicator->insert($message, 'login1');
 
         $communicator->fireAllRules();
 
